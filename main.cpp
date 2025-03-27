@@ -7,11 +7,18 @@ using namespace std;
 
 int main() {
 
+    //CONST
 
-    cout << "Hello World" << endl;
+     const  int x = 900;
+     const  int y = 900;
+     const float PADDLE_WIDTH = 10.0f;
+     const float PADDLE_HEIGHT = 60.0f;
+     const float PADDLE_SPEED = 6.0f;
+     const float PADDLE_DECELERATION = 0.95f;
 
-    int x = 300;
-    int y = 300;
+
+    //VARIABLES
+
 
     InitWindow(x, y, "Gregs Raylib");
     SetTargetFPS(60);
@@ -23,10 +30,20 @@ int main() {
     int ballX = 0;
     int ballY = 0;
 
-    int movementX = 10;
-    int movementY = 10;
+    Paddle leftPaddle;
 
-    Vector2 position = {x / 4};
+    leftPaddle.Init(
+        Vector2{ 50.0f, (y / 2.0f) - (PADDLE_HEIGHT / 2.0f) }, 
+        Vector2{ 0.0f, 0.0f },                                  
+        PADDLE_WIDTH,                                      
+        PADDLE_HEIGHT,                                      
+        WHITE);
+
+
+    int movementX = -10;
+    int movementY = -10;
+
+    Vector2 position = {x /4};
 
 
     while (!WindowShouldClose()) {
@@ -35,30 +52,62 @@ int main() {
         ballX += movementX;
         ballY += movementY;
 
-        if (ballX >= x  )
+
+        // Create ball position vector and set radius
+        Vector2 ballPos = { static_cast<float>(ballX), static_cast<float>(ballY) };
+        float ballRadius = 10.0f;
+
+        if (CheckCollisionCircleRec(ballPos, ballRadius, leftPaddle.GetPaddleRectangle()))
         {
-            movementX = -10;
+            movementX = -movementX;
+            movementY += leftPaddle.GetSpeed().y;
+            ballX = leftPaddle.GetPosition().x + leftPaddle.GetWidth() + 1;
+        }
+
+
+        if (ballX >= x || ballX <= 0 || ballY >= y || ballY <= 0)
+        {
+            ballX = x / 2;
+            ballY = y / 2;
 
 
 
         }
-        if (ballY > y)
-        {
-            movementY = -10;
+        // Left Paddle
 
-        }       
- 
-        if (ballX <= 0)
-        {
-            movementX = 10;
+        leftPaddle.Update();
 
-        }
-        if (ballY < 0)
+        if (IsKeyDown('S'))
         {
-            movementY = 10;
-
+            leftPaddle.SetSpeed(Vector2{ 0.0f,PADDLE_SPEED });
         }
 
+
+        if (IsKeyDown('W'))
+        {
+            leftPaddle.SetSpeed(Vector2{ 0.0f,-PADDLE_SPEED });
+        }
+
+        else {
+
+            leftPaddle.SetSpeed(Vector2{ 0.0f,leftPaddle.GetSpeed().y * PADDLE_DECELERATION });
+
+        }
+
+        //Collisions left
+
+        if (leftPaddle.GetPosition().y <= 0)
+        {
+            leftPaddle.SetPosition(Vector2{ leftPaddle.GetPosition().x,0 });
+        }
+
+
+        else if (leftPaddle.GetPosition().y + leftPaddle.GetHeight() >= y) 
+        {
+
+            leftPaddle.SetPosition(Vector2{ leftPaddle.GetPosition().x, y - leftPaddle.GetHeight() });
+
+        }
 
         BeginDrawing();
 
@@ -69,6 +118,8 @@ int main() {
 
         //Draw
         DrawCircle(ballX, ballY, 10, Color{ 2,222,233, 242 });
+        leftPaddle.Draw();
+        DrawRectangle(x / 2.0f, 0,4, y, WHITE);
 
         EndDrawing();
     }

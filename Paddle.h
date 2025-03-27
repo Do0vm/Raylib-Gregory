@@ -1,29 +1,46 @@
-#pragma once
-#include "raylib.h"
-#include <iostream>
-#include <vector>
+#ifndef PADDLE_H
+#define PADDLE_H
 
-using namespace std;
+#include "raylib.h"  
 
-class Paddle {
-	
-
-	Paddle();
-	Paddle(float x, float y, float width, float height, int speedDown, int speedUp);
-
+class MovingObject {
 public:
+    MovingObject();
+    MovingObject(Vector2 position, Vector2 speed);
+    virtual ~MovingObject();
 
+    Vector2 GetPosition() const;
+    void SetPosition(Vector2 position);
+    Vector2 GetSpeed() const;
+    void SetSpeed(Vector2 speed);
 
-
-	
-
-	int GetSpeedDown() const;
-	int GetSpeedUp() const;
+   
+    void Init(Vector2 position, Vector2 speed);
+    virtual void Update();
 
 protected:
-
-
-
-
-
+    Vector2 recPosition;
+    Vector2 recSpeed;
 };
+
+class Paddle : public MovingObject {
+public:
+   
+    Paddle();
+    Paddle(Vector2 position, Vector2 speed, float width, float height, Color color);
+
+    void Init(Vector2 position, Vector2 speed, float width, float height, Color color);
+
+    void Draw() const;
+
+    Rectangle GetPaddleRectangle() const;
+    float GetWidth() const;
+    float GetHeight() const;
+
+private:
+    float recWidth;
+    float recHeight;
+    Color recColor;
+};
+
+#endif 
