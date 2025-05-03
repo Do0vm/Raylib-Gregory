@@ -34,6 +34,8 @@ extern Paddle leftPaddle;
 extern Paddle rightPaddle;
 extern Ball gameBall; 
 extern Font gameFont;
+extern Music backgroundMusic;   
+extern Texture2D backgroundTexture;
 
 // --- Function Declarations ---
 void InitGame();

@@ -6,6 +6,7 @@
 int main() {
     // Initialization
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
+    InitAudioDevice();
     SetTargetFPS(60);
     srand(time(NULL)); 
 
@@ -15,6 +16,30 @@ int main() {
         gameFont = GetFontDefault();
         TraceLog(LOG_WARNING, "Failed to load font 'alagard.png'. Using default font.");
     }
+
+    // Background Music
+
+    backgroundMusic = LoadMusicStream("resources/audio/music.mp3");
+    if (backgroundMusic.stream.buffer == NULL) {
+        TraceLog(LOG_WARNING, "AUDIO: Failed to load music stream 'resources/audio/music.mp3'");
+        // Handle error appropriately, maybe game continues without music
+    }
+    else {
+        PlayMusicStream(backgroundMusic); 
+        SetMusicVolume(backgroundMusic, 0.2f); 
+    }
+
+
+    // Background Texture
+   
+    backgroundTexture = LoadTexture("resources/textures/background.png");
+    if (backgroundTexture.id == 0) {
+        TraceLog(LOG_WARNING, "TEXTURE: Failed to load texture 'resources/textures/background.png'");
+       
+    }
+
+
+
 
     InitGame(); // Initialize game state
 
@@ -31,6 +56,17 @@ int main() {
 
         // --- Draw ---
         BeginDrawing();
+
+        if (backgroundTexture.id > 0) { 
+            
+            DrawTexture(backgroundTexture, 0, 0, WHITE);
+        }
+        else {
+            
+            ClearBackground(DARKGREEN);
+        }
+
+
         ClearBackground(DARKGREEN);
 
         switch (currentScreen) {
@@ -41,11 +77,29 @@ int main() {
         default: break;
         }
 
+        if (backgroundMusic.stream.buffer != NULL) { 
+            UpdateMusicStream(backgroundMusic);
+        }
+
         EndDrawing();
     }
 
     // De-Initialization
     UnloadFont(gameFont);
+    // Unload Music Stream
+    if (backgroundMusic.stream.buffer != NULL) {
+        UnloadMusicStream(backgroundMusic);
+    }
+
+    // Unload Texture
+    if (backgroundTexture.id > 0) {
+        UnloadTexture(backgroundTexture);
+    }
+
+
+    CloseAudioDevice();
+
+
     CloseWindow();
 
     return 0;

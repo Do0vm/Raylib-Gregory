@@ -13,7 +13,7 @@ void Ball::Init(Vector2 pos, Vector2 initialSpeed, float rad, Color col, float i
     initialSpeedMagnitude = initialMag;
 }
 
-void Ball::Reset(float screenWidth, float screenHeight, bool toLeftPlayer) {
+void Ball::Reset(float screenWidth, float screenHeight, bool toLeftPlayer) { // improved to make it more random speed
     position = { screenWidth / 2.0f, screenHeight / 2.0f };
 
     float randomY = (float)(rand() % 100 - 50) / 50.0f; // Range -1.0 to 1.0

@@ -27,7 +27,8 @@ Paddle leftPaddle;
 Paddle rightPaddle;
 Ball gameBall; // Define the global Ball object
 Font gameFont;
-
+Music backgroundMusic;   
+Texture2D backgroundTexture;
 
 // --- Function Implementations ---
 
@@ -157,11 +158,11 @@ void DrawTextCentered(const char* text, int posY, int fontSize, Color color) {
 }
 
 void DrawMenu() {
-    DrawTextCentered("PONG", WINDOW_HEIGHT / 4, 100, WHITE);
-    DrawTextCentered("Press ENTER to Start", WINDOW_HEIGHT / 2, 40, LIGHTGRAY);
-    DrawTextCentered("W/S for Left Paddle", WINDOW_HEIGHT / 2 + 50, 20, LIGHTGRAY);
-    DrawTextCentered("UP/DOWN for Right Paddle", WINDOW_HEIGHT / 2 + 80, 20, LIGHTGRAY);
-    DrawTextCentered("P to Pause during game", WINDOW_HEIGHT / 2 + 110, 20, LIGHTGRAY);
+    DrawTextCentered("PONG", WINDOW_HEIGHT / 4, 100, BLUE);
+    DrawTextCentered("Press ENTER to Start", WINDOW_HEIGHT / 2, 40, RED);
+    DrawTextCentered("W/S for Left Paddle", WINDOW_HEIGHT / 2 + 50, 20, GOLD);
+    DrawTextCentered("UP/DOWN for Right Paddle", WINDOW_HEIGHT / 2 + 80, 20, GOLD);
+    DrawTextCentered("P to Pause during game", WINDOW_HEIGHT / 2 + 110, 20, GOLD);
 }
 
 void DrawPlaying() {
@@ -174,17 +175,17 @@ void DrawPlaying() {
     std::string lScoreStr = std::to_string(leftScore);
     std::string rScoreStr = std::to_string(rightScore);
     if (gameFont.texture.id != 0) { // Check if font loaded before drawing text
-        DrawTextEx(gameFont, lScoreStr.c_str(), Vector2{ WINDOW_WIDTH / 4.0f, 20.0f }, 65, 2, DARKPURPLE);
-        DrawTextEx(gameFont, rScoreStr.c_str(), Vector2{ (WINDOW_WIDTH / 4.0f + WINDOW_WIDTH / 2.0f) - 30.0f, 20.0f }, 65, 2, DARKPURPLE);
+        DrawTextEx(gameFont, lScoreStr.c_str(), Vector2{ WINDOW_WIDTH / 4.0f, 20.0f }, 65, 2, GOLD);
+        DrawTextEx(gameFont, rScoreStr.c_str(), Vector2{ (WINDOW_WIDTH / 4.0f + WINDOW_WIDTH / 2.0f) - 30.0f, 20.0f }, 65, 2, GOLD);
     }
 }
 
 void DrawPause() {
     DrawPlaying(); // Draw game state underneath
     DrawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, Fade(BLACK, 0.7f));
-    DrawTextCentered("PAUSED", WINDOW_HEIGHT / 2 - 60, 80, WHITE);
-    DrawTextCentered("Press P to Resume", WINDOW_HEIGHT / 2 + 20, 30, LIGHTGRAY);
-    DrawTextCentered("Press ENTER for Menu", WINDOW_HEIGHT / 2 + 60, 30, LIGHTGRAY);
+    DrawTextCentered("PAUSED", WINDOW_HEIGHT / 2 - 60, 80, RED);
+    DrawTextCentered("Press P to Resume", WINDOW_HEIGHT / 2 + 20, 30, GOLD);
+    DrawTextCentered("Press ENTER for Menu", WINDOW_HEIGHT / 2 + 60, 30, GOLD);
 }
 
 void DrawGameOver() {
@@ -193,10 +194,10 @@ void DrawGameOver() {
     DrawTextCentered("GAME OVER", WINDOW_HEIGHT / 3, 80, RED);
 
     const char* winnerText = (leftScore > rightScore) ? "Left Player Wins!" : "Right Player Wins!";
-    DrawTextCentered(winnerText, WINDOW_HEIGHT / 2 - 20, 50, WHITE);
+    DrawTextCentered(winnerText, WINDOW_HEIGHT / 2 - 20, 50, GOLD);
 
     std::string finalScoreText = std::to_string(leftScore) + " - " + std::to_string(rightScore);
-    DrawTextCentered(finalScoreText.c_str(), WINDOW_HEIGHT / 2 + 40, 40, LIGHTGRAY);
+    DrawTextCentered(finalScoreText.c_str(), WINDOW_HEIGHT / 2 + 40, 40, RED);
 
-    DrawTextCentered("Press ENTER for Menu", WINDOW_HEIGHT / 2 + 100, 30, LIGHTGRAY);
+    DrawTextCentered("Press ENTER for Menu", WINDOW_HEIGHT / 2 + 100, 30, RED);
 }
