@@ -1,102 +1,68 @@
 #include "Paddle.h"
+#include "raylib.h" 
+#include <cmath>
 
-// ------------------------ MovingObject Implementation ------------------------
+Paddle::Paddle() : position{ 0, 0 }, speed{ 0, 0 }, width(0), height(0), deceleration(0.9f), color(WHITE) {}
 
-MovingObject::MovingObject() :
-    recPosition{ Vector2{50.0f, 50.0f} },
-    recSpeed{ Vector2{1.0f, 1.0f} }
-{
+void Paddle::Init(Vector2 pos, Vector2 spd, float w, float h, float decel, Color col) {
+    position = pos;
+    speed = spd;
+    width = w;
+    height = h;
+    deceleration = decel;
+    color = col;
 }
 
-MovingObject::MovingObject(Vector2 position, Vector2 speed) :
-    recPosition{ position },
-    recSpeed{ speed }
-{
+void Paddle::Update(float screenHeight) {
+    position.y += speed.y;
+
+    // Boundary Collision Check
+    if (position.y <= 0) {
+        position.y = 0;
+        speed.y = 0; 
+    }
+    else if (position.y + height >= screenHeight) {
+        position.y = screenHeight - height;
+        speed.y = 0; 
+    }
 }
 
-MovingObject::~MovingObject()
-{
+void Paddle::ApplyDeceleration() {
+    speed.y *= deceleration;
+    //This prevents driftss
+    if (fabs(speed.y) < 0.1f) {
+        speed.y = 0.0f;
+    }
 }
 
-Vector2 MovingObject::GetPosition() const
-{
-    return recPosition;
+void Paddle::Draw() {
+    DrawRectangleV(position, Vector2{ width, height }, color);
 }
 
-void MovingObject::SetPosition(Vector2 position)
-{
-    recPosition = position;
+Rectangle Paddle::GetPaddleRectangle() const {
+    return Rectangle{ position.x, position.y, width, height };
 }
 
-Vector2 MovingObject::GetSpeed() const
-{
-    return recSpeed;
+Vector2 Paddle::GetPosition() const {
+    return position;
 }
 
-void MovingObject::SetSpeed(Vector2 speed)
-{
-    recSpeed = speed;
+Vector2 Paddle::GetSpeed() const {
+    return speed;
 }
 
-void MovingObject::Init(Vector2 position, Vector2 speed)
-{
-    recPosition = position;
-    recSpeed = speed;
+float Paddle::GetWidth() const {
+    return width;
 }
 
-void MovingObject::Update()
-{
-    recPosition.x += recSpeed.x;
-    recPosition.y += recSpeed.y;
+float Paddle::GetHeight() const {
+    return height;
 }
 
-// ------------------------ Paddle Implementation ------------------------
-
-Paddle::Paddle() :
-    MovingObject(),
-    recWidth{ 0.0f },
-    recHeight{ 0.0f },
-    recColor{ WHITE }
-{
+void Paddle::SetPosition(Vector2 pos) {
+    position = pos;
 }
 
-Paddle::Paddle(Vector2 position, Vector2 speed, float width, float height, Color color) :
-    MovingObject(position, speed),
-    recWidth{ width },
-    recHeight{ height },
-    recColor{ color }
-{
-}
-
-
-
-void Paddle::Init(Vector2 position, Vector2 speed, float width, float height, Color color)
-{
-    
-
-    MovingObject::Init(position, speed);
-    recWidth = width;
-    recHeight = height;
-    recColor = color;
-}
-
-void Paddle::Draw() const
-{
-    DrawRectangle(static_cast<int>(recPosition.x), static_cast<int>(recPosition.y),
-        static_cast<int>(recWidth), static_cast<int>(recHeight), recColor);
-}
-
-Rectangle Paddle::GetPaddleRectangle() const
-{
-    return Rectangle{ recPosition.x, recPosition.y, recWidth, recHeight };
-}
-
-float Paddle::GetWidth() const
-{
-    return recWidth;
-}
-
-float Paddle::GetHeight() const
-{
-    return recHeight;
+void Paddle::SetSpeed(Vector2 spd) {
+    speed = spd;
 }
